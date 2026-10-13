@@ -15,10 +15,35 @@ node server.js
 
 ## API
 
-- `GET /api/products` — список товаров.
+- `GET /api/products` — список товаров с поиском, фильтрами, сортировкой и необязательной пагинацией.
 - `GET /api/products/:id` — товар по номеру.
 - `GET /api/categories` — категории.
 - `POST /api/orders` — создать заказ.
+
+### Поиск и фильтры товаров
+
+Все параметры можно сочетать. Для поиска используйте `q`; для категории — `category_id` из ответа `/api/categories`; цены задаются целыми числами.
+
+Примеры:
+
+- `/api/products?q=ноутбук` — поиск по названию и описанию.
+- `/api/products?category_id=2&min_price=10000&max_price=80000` — категория и диапазон цен.
+- `/api/products?in_stock=true&sort=price_asc` — только товары в наличии, сначала дешёвые.
+- `/api/products?sort=name_asc` — сортировка по названию.
+- `/api/products?q=смартфон&page=1&limit=10` — поиск с постраничной выдачей.
+
+Допустимые значения `sort`: `id`, `price_asc`, `price_desc`, `name_asc`, `name_desc`. `in_stock` принимает `true` или `false`. `limit` может быть от 1 до 100.
+
+Если `page` и `limit` не переданы, `/api/products` по-прежнему возвращает массив товаров. Если передан хотя бы один из них, ответ имеет вид:
+
+```json
+{
+  "items": [],
+  "pagination": { "page": 1, "limit": 10, "total": 2, "totalPages": 1 }
+}
+```
+
+Некорректные параметры возвращают HTTP 400 и объект с полем `message`.
 
 Пример тела запроса для заказа:
 

@@ -74,14 +74,102 @@ app.get("/api/categories", (req, res) => {
 });
 
 app.get("/api/products", (req, res) => {
-  const products = db.prepare(`
-    SELECT products.id, products.name, products.description, products.price,
-           products.stock, categories.name AS category
+  const { q, category_id, min_price, max_price, in_stock, sort, page, limit } = req.query;
+  const conditions = [];
+  const values = [];
+
+  if (q !== undefined) {
+    if (typeof q !== "string" || q.trim().length > 100) {
+      return res.status(400).json({ message: "Параметр q должен содержать не более 100 символов" });
+    }
+    const search = `%${q.trim()}%`;
+    conditions.push("(products.name LIKE ? OR products.description LIKE ?)");
+    values.push(search, search);
+  }
+
+  if (category_id !== undefined) {
+    const categoryId = Number(category_id);
+    if (!Number.isInteger(categoryId) || categoryId < 1) {
+      return res.status(400).json({ message: "category_id должен быть положительным целым числом" });
+    }
+    conditions.push("products.category_id = ?");
+    values.push(categoryId);
+  }
+
+  for (const [key, value] of [["min_price", min_price], ["max_price", max_price]]) {
+    if (value !== undefined) {
+      const price = Number(value);
+      if (!Number.isInteger(price) || price < 0) {
+        return res.status(400).json({ message: `${key} должен быть целым числом не меньше 0` });
+      }
+      conditions.push(key === "min_price" ? "products.price >= ?" : "products.price <= ?");
+      values.push(price);
+    }
+  }
+
+  if (min_price !== undefined && max_price !== undefined && Number(min_price) > Number(max_price)) {
+    return res.status(400).json({ message: "min_price не может быть больше max_price" });
+  }
+
+  if (in_stock !== undefined) {
+    if (in_stock !== "true" && in_stock !== "false") {
+      return res.status(400).json({ message: "in_stock должен быть true или false" });
+    }
+    conditions.push(in_stock === "true" ? "products.stock > 0" : "products.stock = 0");
+  }
+
+  const sortOptions = {
+    id: "products.id ASC",
+    price_asc: "products.price ASC, products.id ASC",
+    price_desc: "products.price DESC, products.id ASC",
+    name_asc: "products.name COLLATE NOCASE ASC, products.id ASC",
+    name_desc: "products.name COLLATE NOCASE DESC, products.id ASC",
+  };
+  const orderBy = sortOptions[sort || "id"];
+  if (!orderBy) {
+    return res.status(400).json({
+      message: "Неизвестная сортировка",
+      allowed: Object.keys(sortOptions),
+    });
+  }
+
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const from = `
     FROM products
     JOIN categories ON categories.id = products.category_id
-    ORDER BY products.id
-  `).all();
-  res.json(products);
+    ${where}
+  `;
+  const selectProducts = `
+    SELECT products.id, products.name, products.description, products.price,
+           products.stock, products.category_id, categories.name AS category
+    ${from}
+    ORDER BY ${orderBy}
+  `;
+
+  // Без page/limit маршрут, как и раньше, возвращает массив товаров.
+  // Если передана пагинация, возвращаем items и общее количество результатов.
+  if (page === undefined && limit === undefined) {
+    return res.json(db.prepare(selectProducts).all(...values));
+  }
+
+  const parsedPage = page === undefined ? 1 : Number(page);
+  const parsedLimit = limit === undefined ? 10 : Number(limit);
+  if (!Number.isInteger(parsedPage) || parsedPage < 1 || !Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
+    return res.status(400).json({ message: "page должен быть >= 1, limit — от 1 до 100" });
+  }
+
+  const total = db.prepare(`SELECT COUNT(*) AS total ${from}`).get(...values).total;
+  const items = db.prepare(`${selectProducts} LIMIT ? OFFSET ?`)
+    .all(...values, parsedLimit, (parsedPage - 1) * parsedLimit);
+  res.json({
+    items,
+    pagination: {
+      page: parsedPage,
+      limit: parsedLimit,
+      total,
+      totalPages: Math.ceil(total / parsedLimit),
+    },
+  });
 });
 
 app.get("/api/products/:id", (req, res) => {
@@ -166,6 +254,19 @@ app.post("/api/orders", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Сервер запущен: http://localhost:${PORT}`);
+  const baseUrl = `http://localhost:${PORT}`;
+  const exampleCategory = db.prepare("SELECT id FROM categories ORDER BY id LIMIT 1").get();
+
+  console.log(`Сервер запущен: ${baseUrl}`);
+  console.log("API — нажимай Ctrl+клик по ссылкам в терминале VS Code:");
+  console.log(`Все товары: ${baseUrl}/api/products`);
+  console.log(`Поиск «ноутбук»: ${baseUrl}/api/products?q=${encodeURIComponent("ноутбук")}`);
+  if (exampleCategory) {
+    console.log(`Фильтр по категории (ID ${exampleCategory.id}): ${baseUrl}/api/products?category_id=${exampleCategory.id}`);
+  }
+  console.log(`Товары в наличии: ${baseUrl}/api/products?in_stock=true`);
+  console.log(`Сортировка по цене: ${baseUrl}/api/products?sort=price_asc`);
+  console.log(`Поиск + фильтр + страницы: ${baseUrl}/api/products?q=${encodeURIComponent("смартфон")}&in_stock=true&sort=price_asc&page=1&limit=10`);
+  console.log(`Категории: ${baseUrl}/api/categories`);
   console.log("База SQLite: backend/data/store.sqlite");
 });
