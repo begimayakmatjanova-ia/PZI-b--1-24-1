@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>TechShop — магазин техники</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span>Бишкек. Доставка по Кыргызстану</span>
+    <nav>
+      <a href="#">+996 000 000 000</a>
+      <a href="#">WhatsApp</a>
+      <a href="#">Instagram</a>
+    </nav>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">
+      <svg viewBox="0 0 32 32" fill="none" stroke="#BFAC8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="14" height="14" rx="2.5"/><path d="M13 5v4M19 5v4M13 23v4M19 23v4M5 13h4M5 19h4M23 13h4M23 19h4" stroke="#0C7E7E"/><path d="M14 16h4M16 14v4"/></svg>
+      Tech<b>Shop</b>
+    </a>
+    <nav class="menu">
+      <a class="on" href="#">Главная</a>
+      <a href="#">Каталог</a>
+      <a href="#">Подбор ПК</a>
+      <a href="#">Оплата и гарантия</a>
+      <a href="#">Контакты</a>
+      <a href="#">ЧАВО</a>
+    </nav>
+    <label class="search lift">
+      <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="Поиск по каталогу" aria-label="Поиск">
+    </label>
+    <button class="cart lift" type="button">
+      <svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 0 0 1 .8h9.3a1 1 0 0 0 1-.8L21 7H6"/></svg>
+      Корзина
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="cats" id="cats" aria-label="Категории"></section>
+
+  <section>
+    <div class="head">
+      <h2>Новинки</h2>
+      <a href="#">Весь каталог</a>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 TechShop. Магазин техники в Бишкеке</span>
+    <span><a href="#">Оплата и гарантия</a> &nbsp;·&nbsp; <a href="#">Контакты</a></span>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
