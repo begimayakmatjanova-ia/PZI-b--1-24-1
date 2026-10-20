@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<title>TechShop — магазин техники</title>
+<title>R-B-D Digital Market — цифровой магазин</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,56 +15,101 @@
   <div class="wrap">
     <span>Бишкек. Доставка по Кыргызстану</span>
     <nav>
-      <a href="#">+996 000 000 000</a>
-      <a href="#">WhatsApp</a>
-      <a href="#">Instagram</a>
+      <a href="contacts.html">+996 000 000 000</a>
+      <a href="contacts.html">WhatsApp</a>
+      <a href="contacts.html">Instagram</a>
     </nav>
   </div>
 </div>
 
 <header>
   <div class="wrap">
-    <a class="logo" href="#">
-      <svg viewBox="0 0 32 32" fill="none" stroke="#BFAC8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="14" height="14" rx="2.5"/><path d="M13 5v4M19 5v4M13 23v4M19 23v4M5 13h4M5 19h4M23 13h4M23 19h4" stroke="#0C7E7E"/><path d="M14 16h4M16 14v4"/></svg>
-      Tech<b>Shop</b>
+    <a class="logo" href="index.html#home" aria-label="R-B-D Digital Market — главная">
+      <svg viewBox="0 0 40 40" role="img" aria-label="Монограмма B"><rect x="2" y="2" width="36" height="36" rx="11" fill="#00272D" stroke="#0C7E7E" stroke-width="2"/><path d="M14 10h8a5.5 5.5 0 0 1 1.2 10.9A6.1 6.1 0 0 1 22 33h-8z" fill="none" stroke="#BFAC8B" stroke-width="3" stroke-linejoin="round"/><path d="M7 20h5m17-8h4m-4 16h4" stroke="#0C7E7E" stroke-width="2" stroke-linecap="round"/><circle cx="34" cy="12" r="1.5" fill="#BFAC8B"/><circle cx="34" cy="28" r="1.5" fill="#BFAC8B"/></svg>
+      R-B-D <b>Digital Market</b>
     </a>
     <nav class="menu">
-      <a class="on" href="#">Главная</a>
-      <a href="#">Каталог</a>
-      <a href="#">Подбор ПК</a>
-      <a href="#">Оплата и гарантия</a>
-      <a href="#">Контакты</a>
-      <a href="#">ЧАВО</a>
+      <a class="on" href="index.html#home">Главная</a>
+      <a href="index.html#catalog">Каталог</a>
+      <a href="index.html#pc-builder">Подбор ПК</a>
+      <a href="payment.html">Оплата</a>
+      <a href="warranty.html">Гарантия</a>
+      <a href="contacts.html">Контакты</a>
+      <a href="faq.html">Частые вопросы</a>
     </nav>
     <label class="search lift">
       <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input type="search" placeholder="Поиск по каталогу" aria-label="Поиск">
     </label>
-    <button class="cart lift" type="button">
+    <button class="cart lift" id="open-cart" type="button" aria-label="Открыть корзину">
       <svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1 1 0 0 0 1 .8h9.3a1 1 0 0 0 1-.8L21 7H6"/></svg>
-      Корзина
+      Корзина <span id="cart-count" class="cart-count">0</span>
     </button>
   </div>
 </header>
 
-<main class="wrap">
-  <section class="cats" id="cats" aria-label="Категории"></section>
+<main class="wrap" id="home">
+  <section class="category-carousel" aria-label="Категории товаров">
+    <button class="carousel-arrow" id="categories-prev" type="button" aria-label="Предыдущие категории">‹</button>
+    <div class="cats-viewport" id="cats-viewport"><div class="cats" id="cats" aria-label="Категории"></div></div>
+    <button class="carousel-arrow" id="categories-next" type="button" aria-label="Следующие категории">›</button>
+  </section>
 
-  <section>
+  <section id="catalog" class="page-section">
     <div class="head">
-      <h2>Новинки</h2>
-      <a href="#">Весь каталог</a>
+      <h2>Каталог техники</h2>
+      <button class="text-button" id="clear-filters" type="button">Сбросить фильтры</button>
     </div>
+    <p class="section-note" id="catalog-status" aria-live="polite"></p>
     <div class="grid" id="grid"></div>
   </section>
+
+  <section id="pc-builder" class="page-section info-section">
+    <div class="head"><h2>Подбор компьютера</h2></div>
+    <p class="section-note">Выбери для чего нужен компьютер и бюджет — покажем подходящие товары из каталога.</p>
+    <form id="builder-form" class="builder-form">
+      <label>Задача
+        <select id="builder-purpose">
+          <option value="Игры">Игры</option>
+          <option value="Работа">Работа</option>
+          <option value="Учёба">Учёба</option>
+        </select>
+      </label>
+      <label>Бюджет, сом
+        <input id="builder-budget" type="number" min="10000" step="5000" value="120000" required>
+      </label>
+      <button class="btn" type="submit">Подобрать</button>
+    </form>
+    <div id="builder-results" class="builder-results" aria-live="polite"></div>
+  </section>
+
 </main>
 
 <footer>
   <div class="wrap">
-    <span>© 2026 TechShop. Магазин техники в Бишкеке</span>
-    <span><a href="#">Оплата и гарантия</a> &nbsp;·&nbsp; <a href="#">Контакты</a></span>
+    <span>© 2026 R-B-D Digital Market · Бишкек</span>
+    <span><a href="payment.html">Оплата</a> &nbsp;·&nbsp; <a href="warranty.html">Гарантия</a> &nbsp;·&nbsp; <a href="contacts.html">Контакты</a> &nbsp;·&nbsp; <a href="faq.html">Частые вопросы</a></span>
   </div>
 </footer>
+
+<dialog id="cart-dialog" class="modal">
+  <div class="modal-head"><h2>Корзина</h2><button class="close-button" type="button" data-close="cart-dialog" aria-label="Закрыть">×</button></div>
+  <div id="cart-items" class="cart-items"></div>
+  <div class="cart-total">Итого: <strong id="cart-total">0 сом</strong></div>
+  <form id="checkout-form" class="checkout-form">
+    <h3>Данные для заказа</h3>
+    <label>Имя<input name="customerName" autocomplete="name" required></label>
+    <label>Телефон<input name="phone" type="tel" autocomplete="tel" placeholder="+996 ..." required></label>
+    <label>Адрес доставки<textarea name="address" autocomplete="street-address" rows="2" required></textarea></label>
+    <button class="btn" id="checkout-button" type="submit">Оформить заказ</button>
+    <p class="section-note" id="checkout-status" aria-live="polite"></p>
+  </form>
+</dialog>
+
+<dialog id="product-dialog" class="modal">
+  <div class="modal-head"><h2>О товаре</h2><button class="close-button" type="button" data-close="product-dialog" aria-label="Закрыть">×</button></div>
+  <div id="product-details"></div>
+</dialog>
 
 <script src="script.js" defer></script>
 </body>

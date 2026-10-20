@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Панель разработчика — R-B-D Digital Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="topbar"><div class="wrap"><span>Панель разработчика · доступ по секретному ключу</span><a href="index.html">Вернуться в магазин</a></div></div>
+  <header><div class="wrap">
+    <a class="logo" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="2" y="2" width="36" height="36" rx="11" fill="#00272D" stroke="#0C7E7E" stroke-width="2"/><path d="M14 10h8a5.5 5.5 0 0 1 1.2 10.9A6.1 6.1 0 0 1 22 33h-8z" fill="none" stroke="#BFAC8B" stroke-width="3" stroke-linejoin="round"/><path d="M7 20h5m17-8h4m-4 16h4" stroke="#0C7E7E" stroke-width="2" stroke-linecap="round"/><circle cx="34" cy="12" r="1.5" fill="#BFAC8B"/><circle cx="34" cy="28" r="1.5" fill="#BFAC8B"/></svg>R-B-D <b>Digital Market</b></a>
+    <nav class="menu"><a href="index.html#home">Главная</a><a href="index.html#catalog">Каталог</a></nav>
+  </div></header>
+  <main class="wrap standalone-page admin-page">
+    <p class="eyebrow">Только для разработчика</p>
+    <h1>Добавить товар</h1>
+    <section class="info-section">
+      <p>Введи ключ из терминала, где запущен backend. Без ключа сервер не примет товар.</p>
+      <form id="admin-product-form" class="admin-form">
+        <label class="wide">Ключ разработчика<input id="admin-token" type="password" autocomplete="off" required></label>
+        <label>Название товара<input name="name" maxlength="120" required></label>
+        <label>Категория<select name="categoryId" id="admin-category" required><option value="">Загружаем категории…</option></select></label>
+        <label>Цена, сом<input name="price" type="number" min="0" step="1" required></label>
+        <label>Количество на складе<input name="stock" type="number" min="0" step="1" value="1" required></label>
+        <label class="wide">Описание<textarea name="description" maxlength="1000" rows="4" placeholder="Характеристики и описание товара"></textarea></label>
+        <button class="btn wide" type="submit">Добавить в каталог</button>
+      </form>
+      <p id="admin-status" class="admin-status" aria-live="polite"></p>
+      <div id="admin-created" class="admin-created" aria-live="polite"></div>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>R-B-D Digital Market</span><a href="index.html#catalog">Открыть каталог</a></div></footer>
+  <script src="admin.js" defer></script>
+</body>
+</html>
