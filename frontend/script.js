@@ -368,5 +368,35 @@ async function startCatalog() {
   }
 }
 
+// Подсветка пункта меню по текущей секции (только якорные ссылки)
+const navItems = [...document.querySelectorAll('.menu a[href*="#"]')]
+  .map((link) => ({ link, el: document.getElementById(link.hash.slice(1)) }))
+  .filter((item) => item.el);
+
+function updateActiveLink() {
+  if (!navItems.length) return;
+  const line = 140;
+  let current = navItems[0];
+
+  for (const item of navItems) {
+    if (item.el.getBoundingClientRect().top <= line) current = item;
+  }
+
+  const pageHeight = document.documentElement.scrollHeight;
+  const scrollable = pageHeight - window.innerHeight > 50;
+  const atBottom = window.innerHeight + window.scrollY >= pageHeight - 2;
+
+  if (window.scrollY < 10) {
+    current = navItems[0];                       
+  } else if (scrollable && atBottom) {
+    current = navItems[navItems.length - 1];   
+
+  navItems.forEach((item) => item.link.classList.toggle('on', item === current));
+}
+
+window.addEventListener('scroll', updateActiveLink, { passive: true });
+window.addEventListener('resize', updateActiveLink);
+window.addEventListener('load', updateActiveLink);
+updateActiveLink();
 updateCartCount();
 startCatalog();
